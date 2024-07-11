@@ -5,6 +5,8 @@ services:
       dockerfile: ./apps/api/Dockerfile
       target: development
     command: pnpm run start:dev api
+    env_file:
+      - ./apps/api/.env
     ports:
       - '1111:1111'
     volumes:
