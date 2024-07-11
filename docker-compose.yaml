@@ -1,0 +1,12 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+      target: development
+    command: pnpm run start:dev api
+    ports:
+      - '1111:1111'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
