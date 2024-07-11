@@ -1,0 +1,34 @@
+# Development stage
+FROM node:22.0.0-alpine as development
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+RUN npm install -g pnpm
+
+RUN pnpm install
+
+COPY . .
+
+RUN pnpm run build
+
+# Production stage
+FROM node:22.0.0-alpine as production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+RUN npm install -g pnpm
+
+RUN pnpm install --prod
+
+COPY --from=development /usr/src/app/dist ./dist
+
+CMD ["node", "dist/apps/api/main"]
