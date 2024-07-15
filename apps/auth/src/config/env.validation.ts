@@ -39,6 +39,12 @@ class EnvironmentVariables {
 
   @IsString()
   RABBITMQ_AUTH_QUEUE: string;
+
+  @IsString()
+  RABBITMQ_DEFAULT_USER: string;
+
+  @IsString()
+  RABBITMQ_DEFAULT_PASS: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {

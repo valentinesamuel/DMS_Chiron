@@ -11,7 +11,7 @@ export class SharedService implements SharedServiceInterface {
     const USER = this.configService.get('RABBITMQ_USERNAME');
     const PASSWORD = this.configService.get('RABBITMQ_PASSWORD');
     const HOST = this.configService.get('RABBITMQ_HOST');
-
+    console.log(queue, `amqp://${USER}:${PASSWORD}@${HOST}`);
     return {
       transport: Transport.RMQ,
       options: {

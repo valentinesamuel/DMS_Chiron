@@ -12,6 +12,8 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - rabbitmq
 
   auth:
     build:
@@ -26,6 +28,8 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - rabbitmq
 
   patient:
     build:
@@ -40,6 +44,8 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - rabbitmq
 
   rabbitmq:
     image: rabbitmq:3.13.4-management-alpine

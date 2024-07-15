@@ -10,4 +10,6 @@ export default () => ({
   patientRmqPassword: process.env.RABBITMQ_PASSWORD,
   patientRmqHost: process.env.RABBITMQ_HOST,
   patientRmqQueue: process.env.RABBITMQ_PATIENT_QUEUE,
+  defaultRmqUser: process.env.RABBITMQ_DEFAULT_USER,
+  defaultRmqPassword: process.env.RABBITMQ_DEFAULT_PASS,
 });
