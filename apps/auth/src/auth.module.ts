@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './config/env.validation';
 import envConfiguration from './config/configuration';
+import { SharedModule } from '@app/shared';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import envConfiguration from './config/configuration';
       load: [envConfiguration],
       validate: validateEnv,
     }),
+    SharedModule.registerRmq('AUTH_SERVICE', process.env.RABBITMQ_AUTH_QUEUE),
   ],
   controllers: [AuthController],
   providers: [AuthService],

@@ -19,13 +19,14 @@ export class SharedModule {
       {
         provide: service,
         useFactory: (configService: ConfigService) => {
-          const USER = configService.get('RABBITMQ_USER');
+          const USER = configService.get('RABBITMQ_USERNAME');
           const PASSWORD = configService.get('RABBITMQ_PASSWORD');
           const HOST = configService.get('RABBITMQ_HOST');
           return ClientProxyFactory.create({
             transport: Transport.RMQ,
             options: {
               urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
+              // urls: [`amqp://localhost:5672`],
               queue,
               queueOptions: {
                 durable: true,

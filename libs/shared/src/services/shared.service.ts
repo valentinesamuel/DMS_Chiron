@@ -8,7 +8,7 @@ export class SharedService implements SharedServiceInterface {
   constructor(private readonly configService: ConfigService) {}
 
   getRmqOptions(queue: string): RmqOptions {
-    const USER = this.configService.get('RABBITMQ_USER');
+    const USER = this.configService.get('RABBITMQ_USERNAME');
     const PASSWORD = this.configService.get('RABBITMQ_PASSWORD');
     const HOST = this.configService.get('RABBITMQ_HOST');
 

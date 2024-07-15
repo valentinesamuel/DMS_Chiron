@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth.module';
+import { PatientModule } from './patient.module';
 import { ConfigService } from '@nestjs/config';
 import { SharedService } from '@app/shared/services/shared.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AuthModule);
+  const app = await NestFactory.create(PatientModule);
 
   const configService = app.get(ConfigService);
 
@@ -14,12 +14,11 @@ async function bootstrap() {
 
   const sharedService = app.get(SharedService);
 
-  const queue = configService.get('RABBITMQ_AUTH_QUEUE');
+  const queue = configService.get('RABBITMQ_PATIENT_QUEUE');
 
   app.connectMicroservice(sharedService.getRmqOptions(queue));
-
   app.startAllMicroservices();
 
-  await app.listen(2222);
+  await app.listen(3333);
 }
 bootstrap();

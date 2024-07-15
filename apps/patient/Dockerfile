@@ -1,5 +1,5 @@
 # Development stage
-FROM node:22.0.0-alpine as development
+FROM node:22.0.0-alpine AS development
 
 WORKDIR /usr/src/app
 
@@ -15,7 +15,7 @@ COPY . .
 RUN pnpm run build
 
 # Production stage
-FROM node:22.0.0-alpine as production
+FROM node:22.0.0-alpine AS production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
@@ -31,4 +31,4 @@ RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["node", "dist/apps/auth/main"]
+CMD ["node", "dist/apps/patient/main"]

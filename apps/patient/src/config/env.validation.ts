@@ -14,19 +14,19 @@ class EnvironmentVariables {
   PORT: number;
 
   @IsString()
-  AUTH_DB_HOST: string;
+  PATIENT_DB_HOST: string;
 
   @IsString()
-  AUTH_DB_PORT: string;
+  PATIENT_DB_PORT: string;
 
   @IsString()
-  AUTH_DB_USERNAME: string;
+  PATIENT_DB_USERNAME: string;
 
   @IsString()
-  AUTH_DB_NAME: string;
+  PATIENT_DB_NAME: string;
 
   @IsString()
-  AUTH_DB_PASSWORD: string;
+  PATIENT_DB_PASSWORD: string;
 
   @IsString()
   RABBITMQ_USERNAME: string;
@@ -38,7 +38,7 @@ class EnvironmentVariables {
   RABBITMQ_HOST: string;
 
   @IsString()
-  RABBITMQ_AUTH_QUEUE: string;
+  RABBITMQ_PATIENT_QUEUE: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {
