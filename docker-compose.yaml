@@ -1,4 +1,21 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3.13.4-management-alpine
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    env_file:
+      - .env.development
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
   api:
     build:
       context: .
@@ -13,7 +30,8 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   auth:
     build:
@@ -29,7 +47,8 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   patient:
     build:
@@ -45,15 +64,5 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - rabbitmq
-
-  rabbitmq:
-    image: rabbitmq:3.13.4-management-alpine
-    hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    env_file:
-      - .env.development
+      rabbitmq:
+        condition: service_healthy
