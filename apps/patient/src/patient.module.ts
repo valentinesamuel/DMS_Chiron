@@ -17,10 +17,7 @@ import envConfiguration from './config/configuration';
       load: [envConfiguration],
       validate: validateEnv,
     }),
-    SharedModule.registerRmq(
-      'PATIENT_SERVICE',
-      process.env.RABBITMQ_PATIENT_QUEUE,
-    ),
+    SharedModule.registerNATSClientModule(),
   ],
   controllers: [PatientController],
   providers: [PatientService],

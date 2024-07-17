@@ -1,6 +1,5 @@
-import { RmqContext, RmqOptions } from '@nestjs/microservices';
+import {} from '@nestjs/microservices';
 
 export interface SharedServiceInterface {
-  getRmqOptions(queue: string): RmqOptions;
-  acknowledgeMessage(context: RmqContext): void;
+  connectToNATSServer(natsServerUrl: string): void;
 }

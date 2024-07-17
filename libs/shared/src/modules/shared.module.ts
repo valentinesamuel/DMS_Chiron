@@ -14,23 +14,22 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
   exports: [SharedService],
 })
 export class SharedModule {
-  static registerRmq(service: string, queue: string): DynamicModule {
+  static registerNATSClientModule(): DynamicModule {
     const providers = [
       {
-        provide: service,
+        provide: 'NATS_CLIENT',
         useFactory: (configService: ConfigService) => {
-          const USER = configService.get('RABBITMQ_USERNAME');
-          const PASSWORD = configService.get('RABBITMQ_PASSWORD');
-          const HOST = configService.get('RABBITMQ_HOST');
+          const NATS_PASSWORD = configService.get('NATS_PASSWORD');
+          const NATS_USERNAME = configService.get('NATS_USERNAME');
+          const NATS_SERVER_URL = configService.get('NATS_SERVER_URL');
+
           return ClientProxyFactory.create({
-            transport: Transport.RMQ,
+            transport: Transport.NATS,
             options: {
-              urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
-              // urls: [`amqp://localhost:5672`],
-              queue,
-              queueOptions: {
-                durable: true,
-              },
+              user: NATS_USERNAME,
+              pass: NATS_PASSWORD,
+              servers: NATS_SERVER_URL,
+              debug: true,
             },
           });
         },

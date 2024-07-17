@@ -14,13 +14,9 @@ async function bootstrap() {
 
   const sharedService = app.get(SharedService);
 
-  const queue = configService.get('RABBITMQ_PATIENT_QUEUE');
-  console.log(queue);
-  const USER = configService.get('RABBITMQ_USERNAME');
-  const PASSWORD = configService.get('RABBITMQ_PASSWORD');
-  const HOST = configService.get('RABBITMQ_HOST');
-  console.log(queue, `amqp://${USER}:${PASSWORD}@${HOST}`);
-  app.connectMicroservice(sharedService.getRmqOptions(queue));
+  const natsServerUrl = configService.get('NATS_SERVER_URL');
+
+  app.connectMicroservice(sharedService.connectToNATSServer(natsServerUrl));
   app.startAllMicroservices();
 
   await app.listen(3333);

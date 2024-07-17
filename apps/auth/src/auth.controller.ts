@@ -1,12 +1,22 @@
-import { Controller, Get } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { ClientProxy, EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject('NATS_CLIENT') private readonly natsClient: ClientProxy,
+  ) {}
 
   @Get()
-  getHello(): string {
-    return this.authService.getHello();
+  getHello() {
+    this.natsClient.emit('hello', 'Hello from Auth Service');
+    return {
+      message: 'Check CLI for the message',
+    };
+  }
+
+  @EventPattern('patient')
+  createPatient(@Payload() data: string) {
+    console.log(data);
   }
 }

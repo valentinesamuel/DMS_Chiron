@@ -14,10 +14,10 @@ async function bootstrap() {
 
   const sharedService = app.get(SharedService);
 
-  const queue = configService.get('RABBITMQ_AUTH_QUEUE');
+  const natsServerUrl = configService.get('NATS_SERVER_URL');
 
-  app.connectMicroservice(sharedService.getRmqOptions(queue));
-
+  app.connectMicroservice(sharedService.connectToNATSServer(natsServerUrl));
+  console.log('Starting all microservices');
   app.startAllMicroservices();
 
   await app.listen(2222);

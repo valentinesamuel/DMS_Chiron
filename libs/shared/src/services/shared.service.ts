@@ -1,33 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { SharedServiceInterface } from '../interfaces/shared.service.interface';
 import { ConfigService } from '@nestjs/config';
-import { RmqContext, RmqOptions, Transport } from '@nestjs/microservices';
+import { NatsOptions, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class SharedService implements SharedServiceInterface {
   constructor(private readonly configService: ConfigService) {}
 
-  getRmqOptions(queue: string): RmqOptions {
-    const USER = this.configService.get('RABBITMQ_USERNAME');
-    const PASSWORD = this.configService.get('RABBITMQ_PASSWORD');
-    const HOST = this.configService.get('RABBITMQ_HOST');
-    console.log(queue, `amqp://${USER}:${PASSWORD}@${HOST}`);
+  connectToNATSServer(natsServerUrl: string): NatsOptions {
+    const NATS_PASSWORD = this.configService.get('NATS_PASSWORD');
+    const NATS_USERNAME = this.configService.get('NATS_USERNAME');
+    const NATS_SERVER_URL = this.configService.get('NATS_SERVER_URL');
+
+    console.log(NATS_SERVER_URL, '<<<<<<>>>>>>', natsServerUrl);
+
     return {
-      transport: Transport.RMQ,
+      transport: Transport.NATS,
       options: {
-        urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
-        noAck: false,
-        queue,
-        queueOptions: {
-          durable: true,
-        },
+        user: NATS_USERNAME,
+        pass: NATS_PASSWORD,
+        servers: NATS_SERVER_URL,
+        debug: true,
       },
     };
-  }
-
-  acknowledgeMessage(context: RmqContext): void {
-    const channel = context.getChannelRef();
-    const message = context.getMessage();
-    channel.ack(message);
   }
 }

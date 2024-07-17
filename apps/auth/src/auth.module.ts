@@ -14,7 +14,7 @@ import { SharedModule } from '@app/shared';
       load: [envConfiguration],
       validate: validateEnv,
     }),
-    SharedModule.registerRmq('AUTH_SERVICE', process.env.RABBITMQ_AUTH_QUEUE),
+    SharedModule.registerNATSClientModule(),
   ],
   controllers: [AuthController],
   providers: [AuthService],

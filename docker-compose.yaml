@@ -1,16 +1,12 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3.13.4-management-alpine
-    hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
+  nats:
+    image: nats:2.7.4-alpine
+    hostname: nats
     ports:
-      - '5672:5672'
-      - '15672:15672'
-    env_file:
-      - .env.development
+      - '4222:4222'
+      - '8222:8222'
     healthcheck:
-      test: [ "CMD", "rabbitmqctl", "status" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8222/healthz" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -30,7 +26,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      rabbitmq:
+      nats:
         condition: service_healthy
 
   auth:
@@ -47,7 +43,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      rabbitmq:
+      nats:
         condition: service_healthy
 
   patient:
@@ -64,5 +60,5 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      rabbitmq:
+      nats:
         condition: service_healthy
