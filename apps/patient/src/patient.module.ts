@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PatientController } from './patient.controller';
 import { PatientService } from './patient.service';
-import { SharedModule } from '@app/shared/modules/shared.module';
 import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './config/env.validation';
 import envConfiguration from './config/configuration';
@@ -17,10 +16,6 @@ import envConfiguration from './config/configuration';
       load: [envConfiguration],
       validate: validateEnv,
     }),
-    SharedModule.registerRmq(
-      'PATIENT_SERVICE',
-      process.env.RABBITMQ_PATIENT_QUEUE,
-    ),
   ],
   controllers: [PatientController],
   providers: [PatientService],

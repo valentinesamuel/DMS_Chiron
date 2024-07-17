@@ -1,20 +1,20 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3.13.4-management-alpine
-    hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    env_file:
-      - .env.development
-    healthcheck:
-      test: [ "CMD", "rabbitmqctl", "status" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
+  # rabbitmq:
+  #   image: rabbitmq:3.13.4-management-alpine
+  #   hostname: rabbitmq
+  #   volumes:
+  #     - /var/lib/rabbitmq
+  #   ports:
+  #     - '5672:5672'
+  #     - '15672:15672'
+  #   env_file:
+  #     - .env.development
+  #   healthcheck:
+  #     test: [ "CMD", "rabbitmqctl", "status" ]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 30s
 
   api:
     build:
@@ -30,8 +30,10 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      rabbitmq:
+      db:
         condition: service_healthy
+    #   rabbitmq:
+    #     condition: service_healthy
 
   auth:
     build:
@@ -47,8 +49,10 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      rabbitmq:
+      db:
         condition: service_healthy
+      # rabbitmq:
+      #   condition: service_healthy
 
   patient:
     build:
@@ -64,5 +68,25 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      rabbitmq:
+      db:
         condition: service_healthy
+    #   rabbitmq:
+    #     condition: service_healthy
+
+  db:
+    image: postgres:latest
+    env_file:
+      - .env.development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
