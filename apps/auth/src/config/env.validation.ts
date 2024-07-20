@@ -16,8 +16,8 @@ class EnvironmentVariables {
   @IsString()
   AUTH_DB_HOST: string;
 
-  @IsString()
-  AUTH_DB_PORT: string;
+  @IsNumber()
+  AUTH_DB_PORT: number;
 
   @IsString()
   AUTH_DB_USERNAME: string;
@@ -57,6 +57,11 @@ export function validateEnv(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
+    errors.forEach((error) => {
+      console.log(error.property);
+      error.constraints && console.log(error.constraints, '\n');
+    });
+
     throw new Error(errors.toString());
   }
   return validatedConfig;

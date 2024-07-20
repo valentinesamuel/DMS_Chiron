@@ -5,7 +5,7 @@ import {
 } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-export const AuthTypeOrmConfig: TypeOrmModuleAsyncOptions = {
+export const PatientTypeOrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
   inject: [ConfigService],
   useFactory: async (
@@ -13,11 +13,12 @@ export const AuthTypeOrmConfig: TypeOrmModuleAsyncOptions = {
   ): Promise<TypeOrmModuleOptions> => {
     return {
       type: 'postgres',
-      host: configService.get<string>('AUTH_DB_HOST'),
-      port: configService.get<number>('AUTH_DB_PORT'),
-      username: configService.get<string>('AUTH_DB_USERNAME'),
-      password: configService.get<string>('AUTH_DB_PASSWORD'),
-      database: configService.get<string>('AUTH_DB_NAME'),
+      host: configService.get<string>('PATIENT_DB_HOST'),
+      port: parseInt(configService.get('PATIENT_DB_PORT')),
+      // port: 5433, // @audit this is only for testing
+      username: configService.get('PATIENT_DB_USERNAME'),
+      database: configService.get('PATIENT_DB_NAME'),
+      password: configService.get('PATIENT_DB_PASSWORD'),
       synchronize: false,
       entities: ['dist/**/*.entity.js'],
       migrations: ['dist/db/migrations/*.js'],
@@ -27,11 +28,11 @@ export const AuthTypeOrmConfig: TypeOrmModuleAsyncOptions = {
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: process.env.AUTH_DB_HOST,
-  port: parseInt(process.env.AUTH_DB_PORT),
-  username: process.env.AUTH_DB_USERNAME,
-  database: process.env.AUTH_DB_NAME,
-  password: process.env.AUTH_DB_PASSWORD,
+  host: process.env.PATIENT_DB_HOST,
+  port: parseInt(process.env.PATIENT_DB_PORT),
+  username: process.env.PATIENT_DB_USERNAME,
+  database: process.env.PATIENT_DB_NAME,
+  password: process.env.PATIENT_DB_PASSWORD,
   entities: ['dist/**/*.entity.js'],
   synchronize: false,
   migrations: ['dist/db/migrations/*.js'],

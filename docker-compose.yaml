@@ -1,4 +1,22 @@
 services:
+  db:
+    image: postgres:latest
+    env_file:
+      - .env.development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh # Ensure this path is correct
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+    
+
   # rabbitmq:
   #   image: rabbitmq:3.13.4-management-alpine
   #   hostname: rabbitmq
@@ -72,21 +90,12 @@ services:
         condition: service_healthy
     #   rabbitmq:
     #     condition: service_healthy
+    networks:
+      - backend
 
-  db:
-    image: postgres:latest
-    env_file:
-      - .env.development
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-    ports:
-      - "5433:5432"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   postgres_data:
+
+networks:
+  backend:

@@ -4,7 +4,9 @@ import { PatientService } from './patient.service';
 import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './config/env.validation';
 import envConfiguration from './config/configuration';
-
+import { PatientTypeOrmConfig } from './db/datasource';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,8 +18,13 @@ import envConfiguration from './config/configuration';
       load: [envConfiguration],
       validate: validateEnv,
     }),
+    TypeOrmModule.forRootAsync(PatientTypeOrmConfig),
   ],
   controllers: [PatientController],
   providers: [PatientService],
 })
-export class PatientModule {}
+export class PatientModule {
+  constructor(private dataSource: DataSource) {
+    console.log('PatientModule.dataSource =====> ');
+  }
+}
